@@ -1,0 +1,81 @@
+body {
+  display: flex;
+    background-color: rgb(49, 51, 56);
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: center;
+    align-items: center;
+  /* rgb(30, 31, 34) */
+}
+
+input {
+  border: none;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 16px;
+  color: #ffffff;
+  background-color: #36393f;
+  height: 44px;
+}
+
+button {
+  border: none;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 16px;
+  color: #ffffff;
+  background-color: transparent;
+  height: 44px;
+  margin-top: 6px;
+}
+
+#mensagens {
+  color: white;
+  max-height: 550px; /* Defina a altura máxima desejada */
+  overflow-y: auto; /* Habilita a rolagem vertical quando necessário */
+  scrollbar-width: thin; /* Define a largura da barra de rolagem */
+  scrollbar-color: #000000d7 #36393f; /* Define a cor da barra de rolagem */
+  width: 1000px;
+  font-size: 20px;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+h1 {
+  color: white;
+  text-align: center;
+}
+
+form {
+  display: flex;
+  gap: 10px;
+  position: absolute;
+  top: 91%;
+}
+
+#icone {
+  width: 32px;
+  height: 32px;
+}
+
+.perfil {
+  max-width: 50px; 
+  max-height: 50px; 
+  border-radius: 70%; 
+  margin-right: 10px; 
+  vertical-align: middle; /*alinha verticalmente a imagem e o texto*/
+  padding: 10px;
+}
+
+.eu {
+  text-align: right; /* Alinha à direita */
+  margin-right: 20px; /* Adiciona margem à direita */
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.outro {
+  text-align: left; /* Alinha à esquerda */
+  margin-left: 20px; /* Adiciona margem à esquerda */
+  padding: 10px;
+  border-radius: 6px;
+}

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bate papo Node.JS e socket.io</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Chat</h1>
+    <div id="mensagens"></div>
+    <form>         
+        <input type="text" id="nome" placeholder="Seu nome de usuário"><br><br>
+        <input type="text" id="mensagem" placeholder="Sua mensagem">
+        <input type="file" id="imagem" accept="image/*"> <!-- Campo de entrada de arquivo para a imagem de perfil -->
+        <button><img id="icone" src="img/icon.png" alt=""></button>        
+    </form>
+  
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        //Cria uma instância do socket.io
+        const socket = io();
+        //Seleciona o valor do input nome de usuário
+        const nomeInput = document.getElementById('nome');
+        //Seleciona o valor do input da mensagem
+        const mensagemInput = document.getElementById('mensagem');
+        //Seleciona a imagem de perfil
+        const imagemInput = document.getElementById('imagem');
+        //Seleciona a lista de mensagens
+        const mensagens = document.getElementById('mensagens');
+
+        //Evento de seleção de imagem
+        imagemInput.addEventListener('change', () => {
+        imagemInput.style.display = 'none'; // Oculta o input de imagem após a seleção
+        });
+
+        //Evento de envio do formulário
+        document.querySelector('form').addEventListener('submit', event => {
+            //Padrão de envios 
+            event.preventDefault();
+        
+            const nome = nomeInput.value;
+            const mensagem = mensagemInput.value;
+        
+            // Verificar se os valores não estão em branco
+            if (nome.trim() && mensagem.trim()) {
+                let perfil = ''; // inicializa a variável perfil
+        
+                // Se houver uma imagem de perfil selecionada
+                if (imagemInput.files.length > 0) {
+                    perfil = URL.createObjectURL(imagemInput.files[0]); // Obtém o caminho da imagem de perfil
+                } else {
+                    perfil = perfilImg.src; // Usa a imagem de perfil definida pelo usuário
+                }
+        
+                // Emitir a mensagem para o servidor
+                socket.emit('chat message', { nome, perfil, mensagem });
+        
+                // Limpar o input da mensagem
+                mensagemInput.value = '';
+        
+                // Desabilita o input do usuário
+                nomeInput.disabled = true;
+            }
+        });
+        
+        socket.on('chat message', dados => {
+            const lista = document.createElement('div');
+
+        // Adiciona classe para identificar a mensagem do usuário
+        lista.classList.add(dados.nome === nomeInput.value ? 'eu' : 'outro');
+
+        // Se houver imagem de perfil, adicione a classe 'perfil'
+        if (dados.perfil) {
+        const imgPerfil = document.createElement('img');
+        imgPerfil.src = dados.perfil;
+        imgPerfil.alt = 'Imagem de Perfil';
+        imgPerfil.classList.add('perfil');
+        lista.appendChild(imgPerfil);
+        }
+
+        // Cria o elemento de texto com nome e mensagem
+        const mensagemUsuario = document.createElement('span');
+        const linhas = processarTexto(dados.mensagem, 30); // Limite de 30 caracteres por linha
+
+        linhas.forEach(linha => {
+        const linhaTexto = document.createElement('span');
+        linhaTexto.textContent = linha;
+    mensagemUsuario.appendChild(linhaTexto);
+
+      // Adicione quebras de linha entre as linhas (opcional)
+      if (linha !== linhas[linhas.length - 1]) {
+        const br = document.createElement('br');
+        mensagemUsuario.appendChild(br);
+      }
+    });
+
+    lista.appendChild(mensagemUsuario);
+
+    mensagens.appendChild(lista);
+
+    mensagens.scrollTop = mensagens.scrollHeight;
+        });
+
+        // Quebra linha
+        function processarTexto(texto, limitePorLinha) {
+            let linhas = [];
+            let linhaAtual = "";
+          
+            for (let i = 0; i < texto.length; i++) {
+              const char = texto.charAt(i);
+          
+              if (linhaAtual.length === limitePorLinha) {
+                linhas.push(linhaAtual);
+                linhaAtual = "";
+              }
+          
+              linhaAtual += char;
+            }
+          
+            if (linhaAtual.length > 0) {
+              linhas.push(linhaAtual);
+            }
+          
+            return linhas;
+          }
+
+    </script>
+
+</body>
+</html>
